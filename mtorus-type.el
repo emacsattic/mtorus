@@ -432,7 +432,8 @@ Optional TYPE-FILTER limits this set to only certain types."
     :inherit-selection
     (lambda (element)
       (setq mtorus-current-ring element)
-      (mtorus-child-element))
+      (mtorus-child-element) ;;; would cause infinite loops
+      )
 
     :alive-p
     (lambda (element)
@@ -527,6 +528,7 @@ Optional TYPE-FILTER limits this set to only certain types."
         ;;(mtorus-element-set-current (mtorus-determine-parent-element element))
         ;;(mtorus-element-detach element)
         )))
+
 
   ;; furthermore there should be some usre customization here,
   ;; im talking about mtorus-type-auto-register-at-topology-p or something
