@@ -389,10 +389,10 @@ Special care for CUA users is taken."
   ;;; old 1.6, but compatible
   (cond
    ((featurep 'cua) ;; FIXME how to detect?
-    (global-set-key '[(f10)]         'mtorus-next-element)
-    (global-set-key '[(f9)]          'mtorus-prev-element)
-    (global-set-key '[(shift f10)]   'mtorus-parent-element)
-    (global-set-key '[(shift f9)]    'mtorus-child-element))
+    (global-set-key '[(f10)]         'mtorus-nephew-element)
+    (global-set-key '[(f9)]          'mtorus-niece-element)
+    (global-set-key '[(shift f10)]   'mtorus-uncle-element)
+    (global-set-key '[(shift f9)]    'mtorus-aunt-element))
    (t
     (global-set-key '[(shift right)] 'mtorus-nephew-element)
     (global-set-key '[(shift left)]  'mtorus-niece-element)
@@ -1477,5 +1477,5 @@ Selection can be done by:
 
 ;; Local variables:
 ;; adaptive-fill-mode: t
-;; adaptive-fill-regexp: "[ 	]*\\([#;>*]+ +\\)?\\(?:#?[ABCD0-9] +[_X] +?\\)?"
+;; adaptive-fill-regexp: "[     ]*\\([#;>*]+ +\\)?\\(?:#?[ABCD0-9] +[_X] +?\\)?"
 ;; End:
