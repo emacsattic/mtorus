@@ -54,14 +54,19 @@
 ;; http://www.emacswiki.org/wiki.pl?MTorus
 
 ;;; ToDo: (in planner syntax)
-;; A1  _ DELETION/DETACHMENT IS ONLY HALF WORKING ATM
-;; A2  _ type conversion
-;;       (convert 'buffer 'marker to 'file and vice versa)
-;; A3  _ bring back mtorus-1.6 special lists
-;; A4  _ handling of elements that are not alive-p anymore
-;;       (don't display/select, quietly discard?)
-;;       -> what happens when a buffer is reverted (or killed and
-;;          reopened)?
+;; #A1  _ manage currying for keyword definition (2004.09.05)
+;; #A2  _ write docs (2004.09.05)
+;; #A3  _ DELETION/DETACHMENT IS ONLY HALF WORKING ATM
+;; #A4  _ bring back mtorus-1.6 special lists
+;; #A5  _ handling of elements that are not alive-p anymore (don't
+;;        display/select, quietly discard?) -> what happens when a buffer is
+;;        reverted (or killed and reopened)?
+;; #A6  _ make current-element/ring frame/window-local
+;; #A7  X fscking bring torii to work >8| (2004.07.30)
+;; #A8  X find some way to inherit topos/orders throughout all elements 
+;;        (2004.08.20)
+;; #A9  X Impl mtorus type 'file (2004.08.26)
+;; #A10 X type conversion (convert 'buffer 'marker to 'file and vice versa)
 
 ;;; Getting Started
 ;;  ===============
@@ -1453,3 +1458,8 @@ Selection can be done by:
 (provide 'mtorus)
 
 ;;; mtorus.el ends here
+
+;; Local variables:
+;; adaptive-fill-mode: t
+;; adaptive-fill-regexp: "[ 	]*\\([#;>*]+ +\\)?\\(?:#?[ABCD0-9] +[_X] +?\\)?"
+;; End:

@@ -633,8 +633,7 @@ if a current ring cannot be determined."
        :symbol 'mtorus-universe
        :name "MTorus universe"
        :value (and (boundp 'mtorus-universe)) ;; (mtorus-element-get-value 'mtorus-universe))
-       :description "This is the only pregenerated ring: The MTorus Universe"
-       :variable-documentation "This is the MTorus Universe.\nDON'T FIDDLE WITH THIS."))))
+       :description "This is the only pregenerated ring: The MTorus Universe"))))
 
 (mtorus-element-initialize)
 
