@@ -345,6 +345,8 @@ This is an ALPHA feature."
 (defvar mtorus-notify-popup-timer nil
   "The timer used to remove the popup window.")
 
+(defvar mtorus-read-string-history nil
+  "The history to use when asking the user.")
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -623,8 +625,10 @@ Unlike mtorus-1.6 elements duplicate names are allowed."
              "Type: "
              (mtorus-type-obarray) nil t)))
           (name
-           (read-string "Name: "
-                        (mtorus-default-name type))))
+           (read-string
+            (format "Name (%s): " (mtorus-default-name type))
+            nil 'mtorus-read-string-history
+            (mtorus-default-name type))))
      (list type name)))
   (run-hook-with-args 'mtorus-create-element-pre-hook type name)
   (let ((element
