@@ -43,6 +43,10 @@
 ;; http://www.skamphausen.de/software/skamacs/mtorus.html
 ;; German intro:
 ;; http://www.skamphausen.de/xemacs/lisp/mtorus.html
+;; English intro:
+;; http://www.emacswiki.org/cgi-bin/wiki/MTorus
+;; Project page:
+;; http://developer.berlios.de/projects/mtorus
 ;;
 ;;; Usage:
 ;;  ======
