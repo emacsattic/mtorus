@@ -171,20 +171,22 @@ argument and returns a `neighborhood', i.e. an alist of \(neighborhood-keyword "
                           "undirected"
                         "directed")
                       ',topology-name))
-                  (let ((neighbors (or (gethash element1 ,'(\, neighborhood-name))
-                                       (puthash element1
-                                                (make-hash-table :test 'equal)
-                                                ,'(\, neighborhood-name))))
-                        (neighbors-rev (and
-                                        ,'(\, undirected-relation-p)
-                                        (or (gethash element2
-                                                     ,'(\, neighborhood-name))
-                                            (puthash element2
+                  (and (mtorus-element-p element1)
+                       (mtorus-element-p element2)
+                       (let ((neighbors (or (gethash element1 ,'(\, neighborhood-name))
+                                            (puthash element1
                                                      (make-hash-table :test 'equal)
-                                                     ,'(\, neighborhood-name))))))
-                    (and ,'(\, undirected-relation-p)
-                         (puthash element1 ','(\, name) neighbors-rev))
-                    (puthash element2 ','(\, name) neighbors)))
+                                                     ,'(\, neighborhood-name))))
+                             (neighbors-rev (and
+                                             ,'(\, undirected-relation-p)
+                                             (or (gethash element2
+                                                          ,'(\, neighborhood-name))
+                                                 (puthash element2
+                                                          (make-hash-table :test 'equal)
+                                                          ,'(\, neighborhood-name))))))
+                         (and ,'(\, undirected-relation-p)
+                              (puthash element1 ','(\, name) neighbors-rev))
+                         (puthash element2 ','(\, name) neighbors))))
                 (defun ,'(\, undef-nh-relation-name) (element1 element2)
                   ,(list
                     '\,
@@ -195,21 +197,23 @@ argument and returns a `neighborhood', i.e. an alist of \(neighborhood-keyword "
                           "undirected"
                         "directed")
                       ',topology-name))
-                  (let ((neighbors (or (gethash element1
-                                                ,'(\, neighborhood-name))
-                                       (puthash element1
-                                                (make-hash-table :test 'equal)
-                                                ,'(\, neighborhood-name))))
-                        (neighbors-rev (and
-                                        ,'(\, undirected-relation-p)
-                                        (or (gethash element2
+                  (and (mtorus-element-p element1)
+                       (mtorus-element-p element2)
+                       (let ((neighbors (or (gethash element1
                                                      ,'(\, neighborhood-name))
-                                            (puthash element2
+                                            (puthash element1
                                                      (make-hash-table :test 'equal)
-                                                     ,'(\, neighborhood-name))))))
-                    (and ,'(\, undirected-relation-p)
-                         (remhash element1 neighbors-rev))
-                    (remhash element2 neighbors)))
+                                                     ,'(\, neighborhood-name))))
+                             (neighbors-rev (and
+                                             ,'(\, undirected-relation-p)
+                                             (or (gethash element2
+                                                          ,'(\, neighborhood-name))
+                                                 (puthash element2
+                                                          (make-hash-table :test 'equal)
+                                                          ,'(\, neighborhood-name))))))
+                         (and ,'(\, undirected-relation-p)
+                              (remhash element1 neighbors-rev))
+                         (remhash element2 neighbors))))
                 (defun ,'(\, neighborhood-name) (element)
                   ,(format "MTorus neighborhood in %s"
                            topology-name)
@@ -295,6 +299,12 @@ argument and returns a `neighborhood', i.e. an alist of \(neighborhood-keyword "
   :group 'mtorus-element)
 
 
+;;; some auxiliary funs
+
+(defun mtorus-topology-neighborhoods (topology)
+  "Return all neighborhoods currently registered with TOPOLOGY."
+  (eval (mtorus-utils-symbol-conc 'mtorus-topology topology 'neighborhoods)))
+
 
 
 
@@ -359,6 +369,8 @@ defines a fun which takes a neighborhood and returns an ordered neighborhood."
   "Order inherited to all newly created elements."
   :group 'mtorus-element)
 
+
+(run-hooks 'mtorus-topology-after-load-hook)
 
 
 (provide 'mtorus-topology)
