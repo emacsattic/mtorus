@@ -56,10 +56,22 @@
 CONSIDER THIS ALPHA AT THE MOMENT!")
 
 
+(defcustom mtorus-state-save-on-exit nil
+  "*Whether to save the current torus to the current dir on exit.
+This is an ALPHA feature."
+  :type 'boolean
+  :group 'mtorus-state)
+(defcustom mtorus-save-on-exit nil
+  "*Whether to save the current torus to the current dir on exit.
+This variable is obsolete. Use `mtorus-state-save-on-exit'."
+  :type 'boolean
+  :group 'mtorus-state)
+
+
 (defcustom mtorus-state-ask-for-state-file nil
-  "*Whether to ask to specify a state file."
-  :group 'mtorus-state
-  :type 'boolean)
+  "*Whether to always ask to specify a state file."
+  :type 'boolean
+  :group 'mtorus-state)
 
 (defcustom mtorus-state-file "~/.mtorus.dump"
   "*The filename where the state of the mtorus-universe will be dumped.
@@ -69,6 +81,7 @@ file name string."
   :group 'mtorus-state)
 
 
+;;; now real code
 
 (define-mtorus-type dump
   :predicate
@@ -144,29 +157,30 @@ If omitted the value of `mtorus-state-file' is used."
           "MTorus state file: "))))
 
   ;; first we dump all elements
-  (let ((tempbuf (get-buffer-create "*MTorus Dump*"))
+  (let (;;(tempbuf (get-buffer-create "*MTorus Dump*"))
         (state-file (or state-file
                         (eval mtorus-state-file))))
-    (erase-buffer tempbuf)
-    (with-current-buffer tempbuf
+    ;;(erase-buffer tempbuf)
+    (with-temp-buffer
 
       ;; the elements themselves
       (maphash
        #'(lambda (elem el-prop-ht)
-           (insert
-            (format
-             "(%s)\n"
-             (mapconcat
-              #'(lambda (obj)
-                  (format "%S" obj))
-              (eval 
-               `(mtorus-state-filter-dumpable
-                 :type ',(mtorus-element-get-type elem)
-                 :symbol ',elem
-                 ,@(mtorus-element-property-get
-                    'value
-                    (mtorus-type-convert-to 'dump el-prop-ht))))
-              " "))))
+           (and (mtorus-element-alive-p elem)
+                (insert
+                 (format
+                  "(%s)\n"
+                  (mapconcat
+                   #'(lambda (obj)
+                       (format "%S" obj))
+                   (eval 
+                    `(mtorus-state-filter-dumpable
+                      :type ',(mtorus-element-get-type elem)
+                      :symbol ',elem
+                      ,@(mtorus-element-property-get
+                         'value
+                         (mtorus-type-convert-to 'dump el-prop-ht))))
+                   " ")))))
        (eval mtorus-elements-hash-table))
 
       ;; now the topology
