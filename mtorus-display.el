@@ -90,7 +90,8 @@ The variable's value is replaced by the function result then."
                         ;;(display-message 'no-log message)
                         )
                        (t
-                        (message message)))))
+                        ;;(message message)
+                        ))))
     (notify . ()))
   "Alist of display instances."
   :group 'mtorus-display)
@@ -384,8 +385,8 @@ The variable's value is replaced by the function result then."
                      (buffer-string))))
     (cond ((fboundp 'display-message)
            (display-message 'no-log msgstr))
-          (t
-           (message msgstr)))))
+          (t (let (message-log-max)
+               (message msgstr))))))
 
 
 
