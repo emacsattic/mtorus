@@ -26,7 +26,10 @@
 
 
 ;;; Commentary:
-;;
+;; This file is not loaded by default.
+;; Put:
+;;   (require 'mtorus-convert)
+;; in your .emacs to enjoy the feature of type conversion.
 
 ;; *** ToDo:
 
@@ -215,8 +218,10 @@ Do not fiddle with it.")
   (let ((convfun (mtorus-utils-symbol-conc
                   'mtorus-type-convert-to
                   type)))
-    (and (fboundp convfun)
-         (funcall convfun conv-prop-ht el-prop-ht))))
+    (or (and (fboundp convfun)
+             conv-prop-ht
+             (funcall convfun conv-prop-ht el-prop-ht))
+        el-prop-ht)))
 (defun mtorus-type-convert-to (type el-prop-ht)
   ""
   (mtorus-type-convert-to-1
@@ -276,7 +281,7 @@ Do not fiddle with it.")
     )
   (define-mtorus-convert file
     ;;:buffer (marker-buffer prop::value)
-    :buffer-name conv::name
+    :buffer-name prop::name
     :buffer-file-name prop::value
     ;;:buffer-point (marker-position prop::value)
     :type 'file
