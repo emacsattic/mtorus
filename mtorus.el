@@ -139,6 +139,8 @@
   (require 'timer)
   )
 
+(require 'mtorus-rings)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Customizable User Settings ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -328,33 +330,6 @@ The universe will dynamically extend when you try to create siblings
 for it (as we cannot represent a real universe).")
 
 
-(defvar mtorus-auto-rings nil
-  "Alist containing the automatically created rings (formerly known
-as special rings).
-
-This alist should be of the form:
- \(\(ring-symbol :name ring-name \[:creator ring-creation-function]
-               :parent rings-parent-torus))
-
-The keywords in detail:
-:name should be a string name of this ring
-:creator should be a function that creates this ring
-  if this keyword is omitted mtorus-ar-create-`ring-symbol' is attempted
-  to be used
-:parent is a parent of this ring
-  if this keyword is omitted `mtorus-universe' will be used
-  (note: `mtorus-universe' is always a valid parent).
-
-With every auto-ring the following hooks are created:
-`ring-symbol'-create-pre-hook -- hook run before creating this ring.
-`ring-symbol'-create-post-hook -- hook run after creation of this ring
-`ring-symbol'-delete-pre-hook -- hook run before deleting this ring
-`ring-symbol'-delete-post-hook -- hook run after deletion of this ring
-
-Each of the auto-rings will have a property '(auto-ring t) in its
-object-plist.")
-
-
 
 ;;; Compatibilty:
 ;; This code was written in and for XEmacs but I hope that these lines
@@ -422,6 +397,7 @@ object-plist.")
   "This inits the universal ring `mtorus-universe'."
   (interactive)
   (setq mtorus-universe nil)
+  (mtorus-maybe-install-kill-hook)
   (run-hooks 'mtorus-init-hook))
 
 
