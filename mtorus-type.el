@@ -526,8 +526,10 @@ Optional TYPE-FILTER limits this set to only certain types."
                 (mtorus-utils-plist-get res-data ':buffer-file-name)))
            (mtorus-element-put-property
             'value element
-            (cond ((get-buffer buffer-name))
-                  ((file-readable-p buffer-filename)
+            (cond ((and buffer-name
+                        (get-buffer buffer-name)))
+                  ((and buffer-filename
+                        (file-readable-p buffer-filename))
                    (find-file buffer-filename))))))))
 
     :alive-p
@@ -600,11 +602,13 @@ Optional TYPE-FILTER limits this set to only certain types."
                 (mtorus-utils-plist-get res-data ':buffer-point)))
            (mtorus-element-put-property
             'value element
-            (cond ((get-buffer buffer-name)
+            (cond ((and buffer-name
+                        (get-buffer buffer-name))
                    (set-marker (make-marker)
                                buffer-point
                                buffer-name))
-                  ((file-readable-p buffer-filename)
+                  ((and buffer-filename
+                        (file-readable-p buffer-filename))
                    (set-marker (make-marker)
                                buffer-point
                                (find-file buffer-filename)))))))))
