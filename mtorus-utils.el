@@ -77,6 +77,10 @@ and make the result a symbol."
                 (mtorus-utils-symbol->keyword keyword))
                (t nil))))
     (mtorus-utils-keyval->cons keyword (plist-get spec keyword default))))
+(defun mtorus-utils-parse-key-cdr (keyword spec &optional default)
+  "Parses SPEC for keyword KEY and returns its value."
+  (cdr-safe (mtorus-utils-parse-key keyword spec default)))
+
 (defun mtorus-utils-parse-spec (spec &optional spec-keywords parse-unsupported)
   "Parses SPEC and returns a list '((key . value) ...).
 The optional SPEC-KEYWORDS list ensures that any keyword from there
