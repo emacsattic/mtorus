@@ -370,10 +370,10 @@ Special care for CUA users is taken."
     (global-set-key '[(shift f10)]   'mtorus-parent-element)
     (global-set-key '[(shift f9)]    'mtorus-child-element))
    (t
-    (global-set-key '[(shift right)] 'mtorus-next-element)
-    (global-set-key '[(shift left)]  'mtorus-prev-element)
-    (global-set-key '[(shift up)]    'mtorus-parent-element)
-    (global-set-key '[(shift down)]  'mtorus-child-element)))
+    (global-set-key '[(shift right)] 'mtorus-nephew-element)
+    (global-set-key '[(shift left)]  'mtorus-niece-element)
+    (global-set-key '[(shift up)]    'mtorus-uncle-element)
+    (global-set-key '[(shift down)]  'mtorus-aunt-element)))
    
   ;; ring handling: f11
   (global-set-key '[(f11)] 'mtorus-create-ring)
