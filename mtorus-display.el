@@ -470,7 +470,8 @@ shorten -- shorten the displayed element string"
          (parents  (mtorus-topology-standard-parents  mtorus-current-element))
          (siblings (mtorus-topology-standard-siblings mtorus-current-element))
          ;;(children (mtorus-topology-standard-children mtorus-current-element))
-         (siblsort (mtorus-order-by-age siblings))
+         (order-fun mtorus-default-order)
+         (siblsort (funcall order-fun siblings))
          ;;(chilsort (mtorus-order-by-age children))
 
          ;;; REVISE ME! ... this is hardcoded thus bad :)

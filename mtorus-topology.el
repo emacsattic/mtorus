@@ -633,7 +633,8 @@ neighborhood type RELATION."
 Basically this is bad code and should be generalized somehow."
   (and (mtorus-type-ring-p ring)
        (progn
-         (mtorus-topology-standard-define-siblings-family ring 'mtorus-universe 'children)
+         (and (not (eq ring 'mtorus-universe))
+              (mtorus-topology-standard-define-siblings-family ring 'mtorus-universe 'children))
          (mtorus-topology-standard-define-siblings ring ring)
          (and (not (eq ring 'mtorus-universe))
               (mtorus-topology-standard-define-children 'mtorus-universe ring))
@@ -712,7 +713,8 @@ defines a fun which takes a neighborhood and returns an ordered neighborhood."
     by-name
     :predicate
     (lambda (el1 el2)
-      (string< (format "%s" el1) (format "%s" el2)))
+      (string< (mtorus-element-get-name el1)
+               (mtorus-element-get-name el2)))
     :order-fun
     'stable-sort)
 
@@ -724,12 +726,22 @@ defines a fun which takes a neighborhood and returns an ordered neighborhood."
        (mtorus-element-get-ctime el1 (current-time))
        (mtorus-element-get-ctime el2 (current-time))))
     :order-fun
+    'stable-sort)
+
+  (define-mtorus-order
+    by-atime
+    :predicate
+    (lambda (el1 el2)
+      (mtorus-utils-time-less-p
+       (mtorus-element-get-atime el2 (current-time))
+       (mtorus-element-get-atime el1 (current-time))))
+    :order-fun
     'stable-sort))
 
 (mtorus-order-initialize)
 
 (defcustom mtorus-default-order 'mtorus-order-by-age
-  "Order inherited to all newly created elements."
+  "*Order inherited to all newly created elements."
   :group 'mtorus-element)
 
 
