@@ -62,8 +62,6 @@
 ;;; Code:
 
 (require 'mtorus-utils)
-;; (require 'mtorus-topology)
-;; (require 'mtorus-type)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Administrative Settings ;;
@@ -233,7 +231,8 @@ Some of the predefined specs:
   "Checks whether ELEMENT is an mtorus element and
 returns PROPERTY."
   (and (mtorus-element-p element)
-       (get element property default)))
+       (or (get element property)
+           default)))
 
 (defmacro mtorus-element-get-property-bouncer (&rest keywords)
   "Installs some useful mtorus-element-get-* funs
@@ -377,6 +376,7 @@ identified by `mtorus-elements-hash-table'."
 (defun mtorus-element-unregister (element)
   "Unregisters ELEMENT completely."
   (and (mtorus-element-valid-p element)
+       (mtorus-element-detach element)
        (remhash element (eval mtorus-elements-hash-table))))
 
 (defun mtorus-element-delete (element)
@@ -396,7 +396,16 @@ not (yet?) update rings that posess this element."
   (run-hook-with-args 'mtorus-element-post-deletion-hook element)
   element)
 
-(defun mtorus-element-detach (element1 element2)
+(defun mtorus-element-detach (element)
+  "Detaches ELEMENT completely from any relation."
+  (and (mtorus-element-p element)
+       (let ((elems (mtorus-topology-find 'standard element)))
+         (mapc #'(lambda (rel)
+                   (mtorus-topology-undefine-relation 'standard (cdr rel) element (car rel)))
+               elems)))
+  element)
+
+(defun mtorus-element-detach-relations (element1 element2)
   "Detaches ELEMENT1 from any relation it has with ELEMENT2."
   (run-hook-with-args 'mtorus-element-pre-detachment-hook element1 element2)
   (and (mtorus-element-p element1)
