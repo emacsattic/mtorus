@@ -1,7 +1,9 @@
 ;;; mtorus.el --- navigation with marks on a ring of rings (torus)
 ;; $Id$
 ;; Copyright (C) 2003 by Stefan Kamphausen
+;;           (C) 2004 by Sebastian Freundt
 ;; Author: Stefan Kamphausen <mail@skamphausen.de>
+;;         Sebastian Freundt <hroptatyr@users.berlios.de>
 ;; Created: Winter 2002
 ;; Keywords: bookmarks, navigation, tools, extensions, user
 
@@ -150,7 +152,9 @@
   (require 'cl)
   (require 'timer))
 
-;;(require 'mtorus-rings) ;;; turned out to be more abstract
+(require 'mtorus-utils)
+(require 'mtorus-topology)
+(require 'mtorus-type)
 (require 'mtorus-element)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
