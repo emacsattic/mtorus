@@ -755,7 +755,9 @@ The auto-rings will be set up by running
   '((ring . "")
     (buffer . #'buffer-name)
     (marker . (format "%s#%s" (buffer-name) (point)))
-    (file . ""))
+    (file . (let ((bfn (buffer-file-name)))
+              (and bfn
+                   (file-name-nondirectory bfn)))))
   "*Names used as defaults when creating elements.
 This is an alist of \(type . default-name-function-or-string\)."
   :group 'mtorus)
@@ -792,11 +794,13 @@ Unlike mtorus-1.6 elements duplicate names are allowed."
             (completing-read
              "Type: "
              (mtorus-type-obarray) nil t)))
+          (default-name
+            (mtorus-default-name type))
           (name
            (read-string
-            (format "Name (%s): " (mtorus-default-name type))
+            (format "Name (%s): " default-name)
             nil 'mtorus-read-string-history
-            (mtorus-default-name type))))
+            default-name)))
      (list type name)))
   (run-hook-with-args 'mtorus-create-element-pre-hook type name)
   (let ((element

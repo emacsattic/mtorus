@@ -160,7 +160,7 @@ If omitted the value of `mtorus-state-file' is used."
         (list
          (setq mtorus-state-file
                (read-file-name
-                "MTorus state file: ")))))
+                "MTorus state file: " (eval mtorus-state-file))))))
 
   ;; first we dump all elements
   (let (;;(tempbuf (get-buffer-create "*MTorus Dump*"))
@@ -215,7 +215,7 @@ If omitted the value of `mtorus-state-file' is used."
         (list
          (setq mtorus-state-file
                (read-file-name
-                "MTorus state file: " nil nil t)))))
+                "MTorus state file: " (eval mtorus-state-file) nil t)))))
 
   (let ((state-file (or state-file
                         (eval mtorus-state-file)))
