@@ -85,7 +85,7 @@ The variable's value is replaced by the function result then."
 
 (defcustom mtorus-displays
   `((message . (lambda (message)
-                 (mtorus-display-siblings)
+                 (mtorus-display-siblings-2)
                  (cond ((featurep 'xemacs)
                         ;;(display-message 'no-log message)
                         )
@@ -382,6 +382,50 @@ The variable's value is replaced by the function result then."
                                          '(face mtorus-highlight-face)))))
                                (insert "  ")))
                          siblsort)
+                     (buffer-string))))
+    (cond ((fboundp 'display-message)
+           (display-message 'no-log msgstr))
+          (t (let (message-log-max)
+               (message msgstr))))))
+
+(defun mtorus-display-siblings-2 ()
+  "Displays current element's siblings in the modeline."
+  (interactive)
+  (let* ((varfun (eval
+                  (cdr-safe (assoc 'element mtorus-display-variable-transformation-map))))
+         (curelt mtorus-current-element)
+         (parents  (mtorus-topology-standard-parents  mtorus-current-element))
+         (siblings (mtorus-topology-standard-siblings mtorus-current-element))
+         (children (mtorus-topology-standard-children mtorus-current-element))
+         (siblsort (mtorus-order-by-age siblings))
+         (chilsort (mtorus-order-by-age children))
+         (msgstr (with-temp-buffer
+                   (insert (format "%s: " (funcall varfun (car parents))))
+                   (mapc #'(lambda (elem)
+                             (let ((felem (funcall varfun elem))
+                                   (pbeg (point)))
+                               (insert (format "%s" felem))
+                               (cond ((equal elem curelt)
+                                      (save-excursion
+                                        (set-text-properties
+                                         pbeg
+                                         (point)
+                                         '(face mtorus-highlight-face)))))
+                               (insert " ")))
+                         siblsort)
+                   ;; (insert " : ")
+;;                    (mapc #'(lambda (elem)
+;;                              (let ((felem (funcall varfun elem))
+;;                                    (pbeg (point)))
+;;                                (insert (format "%s" felem))
+;;                                (cond ((equal elem curelt)
+;;                                       (save-excursion
+;;                                         (set-text-properties
+;;                                          pbeg
+;;                                          (point)
+;;                                          '(face mtorus-highlight-face)))))
+;;                                (insert "  ")))
+;;                          chilsort)
                      (buffer-string))))
     (cond ((fboundp 'display-message)
            (display-message 'no-log msgstr))

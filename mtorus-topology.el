@@ -732,8 +732,9 @@ defines a fun which takes a neighborhood and returns an ordered neighborhood."
     by-age
     :predicate
     (lambda (el1 el2)
-      (mtorus-utils-time-less-p (mtorus-element-get-ctime el1 (current-time))
-                                (mtorus-element-get-ctime el2 (current-time))))
+      (mtorus-utils-time-less-p
+       (mtorus-element-get-ctime el1 (current-time))
+       (mtorus-element-get-ctime el2 (current-time))))
     :order-fun
     'stable-sort))
 

@@ -1064,8 +1064,9 @@ This is done with respect to the current topology."
                         mtorus-current-element)
                        (t (mtorus-determine-parent-element
                            mtorus-current-element))))
-         (newelt (mtorus-determine-prev-element
-                  curelt)))
+         (newelt (mtorus-determine-child-element
+                  (mtorus-determine-prev-element
+                   curelt))))
     (mtorus-element-set-current newelt)
     (mtorus-display-message
      message
@@ -1081,8 +1082,9 @@ This is done with respect to the current topology."
                         mtorus-current-element)
                        (t (mtorus-determine-parent-element
                            mtorus-current-element))))
-         (newelt (mtorus-determine-next-element
-                  curelt)))
+         (newelt (mtorus-determine-child-element
+                  (mtorus-determine-next-element
+                   curelt))))
     (mtorus-element-set-current newelt)
     (mtorus-display-message
      message

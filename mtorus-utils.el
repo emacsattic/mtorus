@@ -104,11 +104,10 @@ The original plist is not modified."
 
 (cond ((fboundp 'time-less-p)
        (defalias 'mtorus-utils-time-less-p 'time-less-p))
-      (t (fset 'mtorus-utils-time-less-p
-               (lambda (t1 t2)
+      (t (defun mtorus-utils-time-less-p (t1 t2)
                  (or (< (car t1) (car t2))
                      (and (= (car t1) (car t2))
-                          (< (nth 1 t1) (nth 1 t2))))))))
+                          (< (nth 1 t1) (nth 1 t2)))))))
 
 ;;;
 (defun mtorus-utils-keyword->symbol (key)
