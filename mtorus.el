@@ -465,7 +465,7 @@ Optional argument UNIVERSE is ignored atm."
          (add-to-list 'mtorus-universe add-ring)
          (run-hooks 'mtorus-add-ring-hook))))
 
-(defun mtorus-new-ring-2 (ring-name)
+(defun mtorus-create-ring-2 (ring-name)
   "Create a ring with name RING-NAME (asked from user).
 If `mtorus-init-ring-emtpy' is non nil a marker at the current point
 is created and pushed on the list, otherwise the ring stays empty for
@@ -485,6 +485,7 @@ It won't create a ring with a name that already exists."
       (mtorus-add-ring-to-universe ring parent)
       (run-hook-with-args 'mtorus-new-ring-hook ring)
       ring)))
+(defalias 'mtorus-new-ring-2 'mtorus-create-ring-2)
 
 
 (defun mtorus-new-ring (ring-name)
@@ -588,12 +589,19 @@ ring."
                (cons (point-marker)
                      (second ring))))))
 
-(defun mtorus-new-marker-2 ()
+(defun mtorus-new-marker-2 (&optional type contents)
   "Create a new marker at the current position.
 It is added to the current ring and made the current entry in that
 ring."
-  (interactive)
-  (mtorus-add-element (mtorus-ring-get-current-ring)))
+  (interactive
+   (list
+    (intern (completing-read "Type: " (mapvector 'identity mtorus-ring-element-types)))))
+  (mtorus-ring-add-element
+   (mtorus-ring-get-current-ring)
+   :type type
+   :contents (cond ((eq type 'buffer)
+                    (current-buffer))
+                   (t nil))))
 
 
 
