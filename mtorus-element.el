@@ -176,7 +176,9 @@ to avoid duplicate cookies.
 
 See also: `mtorus-element-generate-cookie-function'"
   (mtorus-utils-symbol-conc  'mtorus (or type 'element)
-                             (format "%.8x" (random))))
+                             (format "%.4x%.4x"
+                                     (mod (random) 65536)
+                                     (mod (random) 65536))))
 ;;(mtorus-element-generate-cookie 'ring)
 
 

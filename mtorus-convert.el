@@ -272,11 +272,20 @@ Do not fiddle with it.")
     )
   (define-mtorus-convert buffer
     :buffer prop::value
-    :buffer-name (buffer-name prop::value)
-    :buffer-file-name (buffer-file-name prop::value)
-    :buffer-point (with-current-buffer prop::value
-                    (point))
-    :element-name (buffer-name prop::value)
+    :buffer-name (or (buffer-name prop::value)
+                     (mtorus-utils-plist-get
+                      :buffer-name prop::resurrection-data))
+    :buffer-file-name (cond ((not (string= (buffer-file-name prop::value) " *temp*"))
+                             (buffer-file-name prop::value))
+                          (t (mtorus-utils-plist-get
+                              :buffer-file-name prop::resurrection-data)))
+    :buffer-point (or (with-current-buffer prop::value
+                        (point))
+                      (mtorus-utils-plist-get
+                       :buffer-point prop::resurrection-data))
+    :element-name (or (buffer-name prop::value)
+                      (mtorus-utils-plist-get
+                       :buffer-name prop::resurrection-data))
     :type 'buffer
     :value conv::buffer
     )

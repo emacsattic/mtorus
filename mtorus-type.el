@@ -338,7 +338,7 @@ NAME is the name of the type."
   (setq mtorus-types
         (remove name mtorus-types))
   (mapc #'(lambda (keyw)
-            (let ((hname (mtorus-type-hook-name keyword type)))
+            (let ((hname (mtorus-type-hook-name keyw name)))
               (eval
                `(makunbound ',hname))))
         (mtorus-type-hook-list))
@@ -638,7 +638,9 @@ Optional TYPE-FILTER limits this set to only certain types."
     :predicate
     (lambda (element)
       "Determines if ELEMENT is a valid file."
-      (file-readable-p (mtorus-element-get-value element)))
+      (let ((file (mtorus-element-get-value element)))
+        (or (tramp-find-foreign-file-name-handler file)
+            (file-readable-p file))))
 
     :inherit-value
     (lambda (element)
@@ -650,7 +652,9 @@ Optional TYPE-FILTER limits this set to only certain types."
 
     :alive-p
     (lambda (element)
-      (file-readable-p (mtorus-element-get-value element)))
+      (let ((file (mtorus-element-get-value element)))
+        (or (tramp-find-foreign-file-name-handler file)
+            (file-readable-p file))))
 
     :post-creation
     (lambda (element)
