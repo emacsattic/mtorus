@@ -50,6 +50,10 @@
   :prefix "mtorus-state-"
   :group 'mtorus)
 
+(defcustom mtorus-state-file "~/.mtorus.dump"
+  "The filename where the state of the mtorus-universe will be dumped."
+  :type 'file
+  :group 'mtorus-state)
 
 (defconst mtorus-state-version "Version: 0.1 $Revision$"
   "Version of mtorus-state backend.
@@ -152,7 +156,8 @@ THIS IS NOT WORKING AT THE MOMENT!")
                               val))
                          (eval (mtorus-utils-symbol-conc
                                 'mtorus-topology-standard nh))))
-            mtorus-topology-standard-neighborhoods))
+            mtorus-topology-standard-neighborhoods)
+      (write-region (point-min) (point-max) mtorus-state-file))
     tempbuf)
 
   ;; now the topology
@@ -170,7 +175,7 @@ THIS IS NOT WORKING AT THE MOMENT!")
   (interactive)
   (with-temp-buffer 
     (erase-buffer)
-    (insert-file-contents "~/.mtorus.dump")
+    (insert-file-contents mtorus-state-file)
     (goto-char (point-min)) (insert "(\n")
     (goto-char (point-max)) (insert "\n)")
     (goto-char (point-min))
