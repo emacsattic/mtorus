@@ -114,62 +114,6 @@ Do not fiddle with it.")
 ;;   :group 'mtorus-topology)
 
 
-(defmacro define-mtorus-topology-find-functions (name &rest properties)
-  "Define find functions for the mtorus topology NAME.
-This really is just an externalized function to not overkill the
-define-mtorus-topology macro."
-  (let ((topology-name
-         (mtorus-utils-symbol-conc 'mtorus-topology name)))
-    (mapc
-     #'eval
-       ;;; find functions
-     ;; this is the find function `mtorus-topology-<TOPO>-find'
-     `((defun ,(mtorus-utils-symbol-conc topology-name 'find)
-         (element)
-         ,(format "Finds all occurences of ELEMENT (along with their neighborhood type")
-         (let ((neighborhoods (mtorus-topology-neighborhoods ',name))
-               (relations))
-           (mapc #'(lambda (neighborhood)
-                     (maphash
-                      #'(lambda (el1 ht)
-                          (maphash
-                           #'(lambda (el2 rel)
-                               (and (or (equal el1 element)
-                                        (equal el2 element))
-                                    (add-to-list 'relations
-                                                 (list el1 el2 rel))))
-                           ht))
-                      (eval
-                       (mtorus-utils-symbol-conc
-                        'mtorus-topology ',name neighborhood))))
-                 neighborhoods)
-           relations))
-
-       ;; this is the find function `mtorus-topology-<TOPO>-find-relation'
-       (defun ,(mtorus-utils-symbol-conc topology-name 'find-relation)
-         (element relation)
-         ,(format "Finds all occurences of ELEMENT along with relation RELATION.")
-         (let ((neighborhoods (mtorus-topology-neighborhoods ',name))
-               (relations))
-           (mapc #'(lambda (neighborhood)
-                     (maphash
-                      #'(lambda (el1 ht)
-                          (maphash
-                           #'(lambda (el2 rel)
-                               (and (or (equal el1 element)
-                                        (equal el2 element))
-                                    (equal rel relation)
-                                    (add-to-list 'relations
-                                                 (list el1 el2 rel))))
-                           ht))
-                      (eval
-                       (mtorus-utils-symbol-conc
-                        'mtorus-topology ',name relation))))
-                 neighborhoods)
-           relations))))
-    t))
-
-
 
 (defmacro define-mtorus-topology (name &rest properties)
   "Define an element topology for mtorus-torii.
@@ -200,8 +144,52 @@ argument and returns a `neighborhood', i.e. an alist of \(neighborhood-keyword "
 
 
        ;;; find functions
-       (define-mtorus-topology-find-functions ',name)
-
+       ;;; find functions
+     ;; this is the find function `mtorus-topology-<TOPO>-find'
+       (defun ,(mtorus-utils-symbol-conc topology-name 'find)
+         (element)
+         ,(format "Finds all occurences of ELEMENT (along with their neighborhood type")
+         (let ((neighborhoods (mtorus-topology-neighborhoods ',name))
+               (relations))
+           (mapc #'(lambda (neighborhood)
+                     (maphash
+                      #'(lambda (el1 ht)
+                          (maphash
+                           #'(lambda (el2 rel)
+                               (and (or (equal el1 element)
+                                        (equal el2 element))
+                                    (add-to-list 'relations
+                                                 (list el1 el2 rel))))
+                           ht))
+                      (eval
+                       (mtorus-utils-symbol-conc
+                        'mtorus-topology ',name neighborhood))))
+                 neighborhoods)
+           relations))
+       
+       ;; this is the find function `mtorus-topology-<TOPO>-find-relation'
+       (defun ,(mtorus-utils-symbol-conc topology-name 'find-relation)
+         (element relation)
+         ,(format "Finds all occurences of ELEMENT along with relation RELATION.")
+         (let ((neighborhoods (mtorus-topology-neighborhoods ',name))
+               (relations))
+           (mapc #'(lambda (neighborhood)
+                     (maphash
+                      #'(lambda (el1 ht)
+                          (maphash
+                           #'(lambda (el2 rel)
+                               (and (or (equal el1 element)
+                                        (equal el2 element))
+                                    (equal rel relation)
+                                    (add-to-list 'relations
+                                                 (list el1 el2 rel))))
+                           ht))
+                      (eval
+                       (mtorus-utils-symbol-conc
+                        'mtorus-topology ',name relation))))
+                 neighborhoods)
+           relations))
+     
        ;; an obarray function
        (defun ,(mtorus-utils-symbol-conc topology-name 'neighborhood 'obarray)
          (&optional filter)
