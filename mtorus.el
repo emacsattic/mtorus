@@ -480,7 +480,7 @@ Optional argument UNIVERSE is ignored atm."
 
 (defun mtorus-create-ring-2 (ring-name)
   "Create a ring with name RING-NAME (asked from user).
-If `mtorus-init-ring-emtpy' is non nil a marker at the current point
+If `mtorus-init-ring-emtpy' is nil a marker at the current point
 is created and pushed on the list, otherwise the ring stays empty for
 the moment.  Makes the new ring the current ring.
 
@@ -494,7 +494,10 @@ It won't create a ring with a name that already exists."
                    ring-name))
         (run-hooks 'mtorus-ring-exists-p-hook))
     (let* ((parent 'mtorus-universe)
-           (ring (mtorus-ring-create-ring :name ring-name :description "User defined mtorus-ring" :parent parent)))
+           (ring (mtorus-ring-create-ring
+                  :name ring-name
+                  :description "User defined mtorus-ring"
+                  :parent parent)))
       (mtorus-add-ring-to-universe ring parent)
       (mtorus-ring-set-current-ring ring)
       (run-hook-with-args 'mtorus-new-ring-hook ring)
@@ -502,9 +505,38 @@ It won't create a ring with a name that already exists."
 (defalias 'mtorus-new-ring-2 'mtorus-create-ring-2)
 
 
+;; this is the defun to be used in future
+(defun mtorus-create-ring-3 (ring-name)
+  "Create a ring with name RING-NAME (asked from user).
+If `mtorus-init-ring-emtpy' is nil a marker at the current point
+is created and pushed on the list, otherwise the ring stays empty for
+the moment. Makes the new ring the current ring."
+  (interactive "sRing name: ")
+;;   (if (mtorus-ring-in-universe-p
+;;        (mtorus-ring-ring-by-name ring-name))
+;;       (prog1
+;;           (mtorus-message
+;;            (format "A ring with name \"%s\" already exists."
+;;                    ring-name))
+;;         (run-hooks 'mtorus-ring-exists-p-hook))
+    (let* ((parent 'mtorus-universe)
+           (ring
+            (mtorus-element-create
+             :type 'ring
+             :name ring-name
+             :value nil
+             :description "User defined mtorus-ring"
+             :variable-documentation "Manually generated mtorus element of type ring.")))
+      (mtorus-element-register ring)
+      (run-hook-with-args 'mtorus-new-ring-hook ring)
+      ring))
+(defalias 'mtorus-new-ring-3 'mtorus-create-ring-3)
+
+
+
 (defun mtorus-new-ring (ring-name)
   "Create a ring with name RING-NAME (asked from user).
-If `mtorus-init-ring-emtpy' is non nil a marker at the current point
+If `mtorus-init-ring-emtpy' is nil a marker at the current point
 is created and pushed on the list, otherwise the ring stays empty for
 the moment.  Makes the new ring the current ring.
 
@@ -563,15 +595,16 @@ If none is given it is asked from the user."
     (mtorus-ring-set-current-ring (car new))
 
     ;;; abstract this
-    (display-message
-     'what
-     (let* ((rngstr (mapconcat #'mtorus-ring-ring-name mtorus-rings " "))
-            (strpos (save-match-data
-                      (string-match (regexp-quote (cdr new)) rngstr)
-                      (cons (match-beginning 0) (match-end 0))))
-            (ext (mtorus-make-extent (car strpos) (cdr strpos) rngstr)))
-       (add-text-properties (car strpos) (cdr strpos) (list 'face 'mtorus-highlight-face) rngstr)
-       rngstr))))
+;;     (display-message
+;;      'what
+;;      (let* ((rngstr (mapconcat #'mtorus-ring-ring-name mtorus-rings " "))
+;;             (strpos (save-match-data
+;;                       (string-match (regexp-quote (cdr new)) rngstr)
+;;                       (cons (match-beginning 0) (match-end 0))))
+;;             (ext (mtorus-make-extent (car strpos) (cdr strpos) rngstr)))
+;;        (add-text-properties (car strpos) (cdr strpos) (list 'face 'mtorus-highlight-face) rngstr)
+;;        rngstr))))
+    (message "%s" (car new))))
 
 
 (defun mtorus-prev-ring ()
@@ -587,16 +620,16 @@ If none is given it is asked from the user."
     (mtorus-ring-set-current-ring (car new))
 
     ;;; abstract this
-    (display-message
-     'what
-     (let* ((rngstr (mapconcat #'mtorus-ring-ring-name mtorus-rings " "))
-            (strpos (save-match-data
-                      (string-match (regexp-quote (cdr new)) rngstr)
-                      (cons (match-beginning 0) (match-end 0))))
-            (ext (mtorus-make-extent (car strpos) (cdr strpos) rngstr)))
-       (add-text-properties (car strpos) (cdr strpos) (list 'face 'mtorus-highlight-face) rngstr)
-       rngstr))))
-
+;;     (display-message
+;;      'what
+;;      (let* ((rngstr (mapconcat #'mtorus-ring-ring-name mtorus-rings " "))
+;;             (strpos (save-match-data
+;;                       (string-match (regexp-quote (cdr new)) rngstr)
+;;                       (cons (match-beginning 0) (match-end 0))))
+;;             (ext (mtorus-make-extent (car strpos) (cdr strpos) rngstr)))
+;;        (add-text-properties (car strpos) (cdr strpos) (list 'face 'mtorus-highlight-face) rngstr)
+;;        rngstr))))
+    (message "%s" (car new))))
 
 
 (defcustom mtorus-next-ring-function '1+
