@@ -119,6 +119,8 @@ THIS IS NOT WORKING AT THE MOMENT!")
 
 (defun mtorus-state-save ()
   "Saves current mtorus to a dump buffer."
+  (interactive)
+
   ;; first we dump all elements
   (let ((tempbuf (get-buffer-create "*MTorus Dump*"))
 ;;        (dump-ht (make-hash-table :test 'equal))
@@ -144,9 +146,10 @@ THIS IS NOT WORKING AT THE MOMENT!")
        (eval mtorus-elements-hash-table))
       (mapc #'(lambda (nh)
                 (maphash #'(lambda (key val)
-                             (maphash #'(lambda (el rel)
-                                          (insert (format "[%s %s %s]\n" rel key el)))
-                                      val))
+                             (maphash
+                              #'(lambda (el rel)
+                                  (insert (format "[%s %s %s]\n" rel key el)))
+                              val))
                          (eval (mtorus-utils-symbol-conc
                                 'mtorus-topology-standard nh))))
             mtorus-topology-standard-neighborhoods))
@@ -164,6 +167,7 @@ THIS IS NOT WORKING AT THE MOMENT!")
 
 (defun mtorus-state-load ()
   ""
+  (interactive)
   (with-temp-buffer 
     (erase-buffer)
     (insert-file-contents "~/.mtorus.dump")
@@ -189,17 +193,15 @@ THIS IS NOT WORKING AT THE MOMENT!")
                 :type 'dump
                 :symbol symbol
                 :name (mtorus-utils-plist-get state-vec ':element-name)
-                :value (cddddr state-vec) ;; (mtorus-element-get-value 'mtorus-universe))
+                :value (cddddr state-vec)
+                :resurrection-data (cddddr state-vec)
                 :description "Restored from dump.")))))))
         ((vectorp state-vec)
-         (mtorus-topology-standard-define-relation (aref state-vec 0) (aref state-vec 1) (aref state-vec 2)))))
+         (mtorus-topology-standard-define-relation
+          (aref state-vec 0) (aref state-vec 1) (aref state-vec 2)))))
        records)
   )
 
-;; (maphash (lambda (k v)
-;;            (insert (format "\n%S %S" k v)))
-;;          (mtorus-type-convert-to 'buffer
-;;                                  (mtorus-type-convert-to 'dump test)))
 
 (provide 'mtorus-state)
 

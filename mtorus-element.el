@@ -117,7 +117,6 @@ At least for every bound element that is in use there's a hash-key.")
 
 
 
-
 ;;;
 ;;; hooks
 ;;;
@@ -212,6 +211,7 @@ See also: `mtorus-element-generate-cookie-function'"
 (define-mtorus-element-property :name
   :if-omitted (format "MTorus %s: %s" :type :symbol))
 (define-mtorus-element-property :value)
+(define-mtorus-element-property :resurrection-data)
 (define-mtorus-element-property :ctime
   :if-omitted (current-time))
 (define-mtorus-element-property :atime

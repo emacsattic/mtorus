@@ -466,8 +466,23 @@ Special care for CUA users is taken."
   (interactive)
   (remove-hook 'mtorus-type-buffer-post-choose-funs 'mtorus-select-element)
   (remove-hook 'mtorus-type-marker-post-choose-funs 'mtorus-select-element)
-  (message "select follows choose"))
+  (message "select follows choose ... off"))
 
+;; dead elements are resurrected
+(defun mtorus-behaviour-select-resurrects-dead (element)
+  ""
+  (unless (mtorus-element-alive-p element)
+    (mtorus-element-resurrect element)))
+(defun mtorus-enable-select-resurrects-dead ()
+  ""
+  (interactive)
+  (add-hook 'mtorus-select-element-pre-hook 'mtorus-behaviour-select-resurrects-dead)
+  (message "select resurrects dead"))
+(defun mtorus-disable-select-resurrects-dead ()
+  ""
+  (interactive)
+  (remove-hook 'mtorus-select-element-pre-hook 'mtorus-behaviour-select-resurrects-dead)
+  (message "select resurrects dead ... off"))
 
 ;; creating a ring, also creates a buffer
 (defun mtorus-behaviour-ring-induces-buffer (element)
@@ -483,7 +498,7 @@ Special care for CUA users is taken."
   ""
   (interactive)
   (remove-hook 'mtorus-create-element-post-hook 'mtorus-behaviour-ring-induces-buffer)
-  (message "ring induces buffer"))
+  (message "ring induces buffer ... off"))
 
 
 ;; creating a ring, also creates a marker
@@ -500,7 +515,7 @@ Special care for CUA users is taken."
   ""
   (interactive)
   (remove-hook 'mtorus-create-element-post-hook 'mtorus-behaviour-ring-induces-marker)
-  (message "ring induces marker"))
+  (message "ring induces marker ... off"))
 
 
 ;; creating a buffer, also creates a marker
@@ -517,7 +532,8 @@ Special care for CUA users is taken."
   ""
   (interactive)
   (remove-hook 'mtorus-create-element-post-hook 'mtorus-behaviour-buffer-induces-marker)
-  (message "buffer induces marker"))
+  (message "buffer induces marker ... off"))
+
 
 
 
@@ -786,9 +802,9 @@ Unlike mtorus-1.6 elements duplicate names are allowed."
             :type type
             :name name
             :value (mtorus-type-invoke-inherit-value type name)
-            :description "User defined mtorus-element"
-            :variable-documentation
-            (format "Manually generated mtorus element of type %s." type)))))
+            :resurrection-data
+            (mtorus-type-invoke-inherit-resurrection-data type name)
+            :description "User defined mtorus-element"))))
     (run-hook-with-args 'mtorus-create-element-post-hook element)
     (mtorus-display-message
      message
